@@ -22,15 +22,16 @@ export default function TodoList() {
 
   const CompletedTodos = useMemo(() => {
     return Todos.filter((t) => {
-    
-      return t.isCompleted
+      return t.isCompleted;
     });
-  });
+  }, [Todos]);
 
-  const notCompletedTodos = Todos.filter((t) => { 
-     console.log("calling note completed todos");
-    return !t.isCompleted;
-  },[{Todos}]);
+  const notCompletedTodos = useMemo(() => {
+    return Todos.filter((t) => {
+      console.log("calling not completed todos");
+      return !t.isCompleted;
+    });
+  }, [Todos]);
 
   let TodosToBe = Todos;
 
