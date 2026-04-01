@@ -6,22 +6,12 @@ import CheckIcon from "@mui/icons-material/Check";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { useContext, useState } from "react";
+import { useContext} from "react";
 import { TodoContext } from "../contexts/TodoContext";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
-import TextField2 from "@mui/material/TextField";
-
-function Todo({ todo }) {
-  const [Del, setDel] = useState(false);
-  const [Eid, setshowEid] = useState(false);
-  const [EidtTodo, setEidtTodo] = useState({ title: "", Details: "" });
+import { ToastContext } from "../contexts/ToastContext";
+function Todo({ todo, showDelete, showEidt}) {
   const { Todos, setTodos } = useContext(TodoContext);
+  const {ShowHideToast} = useContext(ToastContext);
   function handleCheckClick() {
     const updateTodos = Todos.map((t) => {
       if (t.id === todo.id) {
@@ -31,112 +21,18 @@ function Todo({ todo }) {
     });
     setTodos(updateTodos);
     localStorage.setItem("todos", JSON.stringify(updateTodos));
+    ShowHideToast("Task updated successfully")
   }
   function handleDeleteClick() {
-    setDel(true);
-  }
-
-  function handleDeleteDialogClose() {
-    setDel(false);
+    showDelete(todo);
   }
 
   function handleEidtClick() {
-    setshowEid(true);
+    showEidt(todo);
   }
 
-  function handleEidtDialogClose() {
-    setshowEid(false);
-  }
-
-  function handleDeleteTodo() {
-    const updateTodos = Todos.filter((t) => {
-      return t.id !== todo.id;
-    });
-    setTodos(updateTodos);
-    localStorage.setItem("todos", JSON.stringify(updateTodos));
-  }
-
-  function handleEidtTodo() {
-    const updatedTodos = Todos.map((t) => {
-      if (t.id === todo.id) {
-        return { ...t, title: EidtTodo.title, Details: EidtTodo.Details };
-      } else {
-        return t;
-      }
-    });
-    setTodos(updatedTodos);
-    handleEidtDialogClose(false);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
-  }
   return (
     <>
-      <Dialog
-        onClose={handleDeleteDialogClose}
-        open={Del}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <div style={{ background: "#703", boxShadow: "0px 2px 2px 10px #fff" }}>
-          <DialogTitle id="alert-dialog-title">
-            Are you sure you want to delete her task?
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Deletion cannot be undone once completed.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleDeleteDialogClose}>Close</Button>
-            <Button autoFocus onClick={handleDeleteTodo}>
-              Agree
-            </Button>
-          </DialogActions>
-        </div>
-      </Dialog>
-
-      <Dialog
-        onClose={handleEidtDialogClose}
-        open={Eid}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <div style={{ background: "#777", boxShadow: "0px 2px 2px 10px #fff" }}>
-          <DialogTitle id="alert-dialog-title">
-            Are you sure you want to delete her task?
-          </DialogTitle>
-          <TextField
-            autoFocus
-            required
-            id="name"
-            label="title Task"
-            fullWidth
-            variant="standard"
-            value={EidtTodo.title}
-            onChange={(e) => {
-              setEidtTodo({ ...EidtTodo, title: e.target.value });
-            }}
-          />
-          <TextField2
-            autoFocus
-            required
-            id="detlias task"
-            label="Detlias"
-            fullWidth
-            variant="standard"
-            value={EidtTodo.Details}
-            onChange={(e) => {
-              setEidtTodo({ ...EidtTodo, Details: e.target.value });
-            }}
-          />
-          <DialogActions>
-            <Button onClick={handleEidtDialogClose}>Close</Button>
-            <Button autoFocus onClick={handleEidtTodo}>
-              update
-            </Button>
-          </DialogActions>
-        </div>
-      </Dialog>
-
       <Card
         className="todoCard"
         sx={{
