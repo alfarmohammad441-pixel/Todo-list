@@ -23,7 +23,7 @@ export default function TodoList() {
   const CompletedTodos = useMemo(() => {
     return Todos.filter((t) => {
     
-      return t.isCompleted;
+      return t.isCompleted
     });
   });
 
